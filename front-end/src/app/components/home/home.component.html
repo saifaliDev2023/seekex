@@ -1,6 +1,6 @@
 <div id="main-content">
     <h2>Bucket Suggestion</h2>
-    <form *ngIf="bucketsData.length == 0" class="post-form" (submit)="submitForm()">
+    <form *ngIf="bucketsData.length == 0 && ballData?.data.length != 0" class="post-form" (submit)="submitForm()">
         <div class="form-group" *ngFor="let item of ballData?.data">
             <label>{{item.color}}</label>
             <input type="text" name="{{item.color}}" [(ngModel)]="formData[item.id]"
@@ -16,4 +16,6 @@
     </div>
 
     <h1 *ngIf="errorData" style="color: red;">{{errorData.error}}</h1>
+    <h1 *ngIf="ballData?.data.length == 0" style="display: flex; justify-content: center; color: red;">No Balls Found
+    </h1>
 </div>

@@ -22,7 +22,6 @@ const Ball = sequelize.define("Ball", {
   color: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   volume: {
     type: DataTypes.FLOAT,

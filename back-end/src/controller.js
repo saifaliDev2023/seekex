@@ -22,10 +22,6 @@ const machine_test = {
   async addBall(req, res, next) {
     try {
       let { color, volume } = req.body;
-      const availableBuckets = await Bucket.findAll({});
-      if (availableBuckets.length === 0) {
-        res.status(500).json({ error: "No bucket available." });
-      }
       const ball = await Ball.create({
         color,
         volume,
