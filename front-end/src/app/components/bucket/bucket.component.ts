@@ -34,7 +34,7 @@ export class BucketComponent implements OnInit {
         .delete(`http://localhost:3030/api/deleteBucket/${bucketId}`)
         .subscribe((response) => {
           console.log('response:', response);
-          this.router.navigate(['/bucket']);
+          window.location.reload();
         });
     }
   }

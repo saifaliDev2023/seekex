@@ -33,7 +33,7 @@ export class BallComponent {
         .delete(`${this.url}/api/deleteBall/${ballId}`)
         .subscribe((response) => {
           console.log('response:', response);
-          this.router.navigate(['/']);
+          window.location.reload();
         });
     }
   }
