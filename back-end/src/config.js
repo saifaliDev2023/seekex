@@ -1,8 +1,8 @@
 // config.js
 
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
-module.exports = new Sequelize('machine_db', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
+module.exports = new Sequelize("seekex", "root", "", {
+  host: "localhost",
+  dialect: "mysql",
 });
