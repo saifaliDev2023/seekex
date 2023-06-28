@@ -1,0 +1,31 @@
+<div id="main-content">
+    <div class="headerTitle">
+        <h2>All Balls</h2>
+        <button class="create_new" routerLink="/addBall">Add New</button>
+    </div>
+    <table cellpadding="7px">
+        <thead>
+            <th>Id</th>
+            <th>Color</th>
+            <th>Volume</th>
+            <th>Action</th>
+        </thead>
+        <tbody *ngFor="let item of ballData?.data">
+            <tr>
+                <td>
+                    {{item.id}}
+                </td>
+                <td>
+                    {{item.color}}
+                </td>
+                <td>
+                    {{item.volume}}
+                </td>
+                <td>
+                    <a (click)="deleteBall(item.id)">Delete</a>
+                </td>
+            </tr>
+            <h2 *ngIf="ballData?.data.length == 0" style="padding: 10px; color: aliceblue;">No Data Found</h2>
+        </tbody>
+    </table>
+</div>

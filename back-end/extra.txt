@@ -1,0 +1,171 @@
+// try {
+    //   let buckets = await Bucket.findAll();
+    //   let balls = await Ball.findAll();
+    //   let db_balls = {};
+    //   const { placeBalls } = req.body; // {1: 10, 2: 5, 3: 6, 4: 1}
+    //   console.log("placeBalls:", placeBalls);
+    //   balls.forEach((value, index) => {
+    //     ball_id = value.dataValues.id;
+    //     db_balls[ball_id] = value.dataValues.volume;
+    //   });
+    //   console.log("db_balls:", db_balls);
+    //   // const placeBalls = { 1: 5, 2: 6, 3: 10 }; // key: balls
+    //   // const db_balls = { 1: 10, 2: 5, 3: 6 }; // key: volum
+    //   const keys1 = Object.keys(placeBalls);
+    //   const keys2 = Object.keys(db_balls);
+    //   let result = [];
+    //   // multiply with db datas
+    //   keys1.forEach((value, index) => {
+    //     const ball_id = keys2[index];
+    //     if (value == ball_id) {
+    //       let balls = placeBalls[value]; // get by body
+    //       let volume = db_balls[ball_id]; // get by db
+    //       result.push({
+    //         ball_id,
+    //         total_ball: balls,
+    //         volume,
+    //         total_volume: parseInt(balls) * parseInt(volume),
+    //       });
+    //     }
+    //     // console.log(`Local[${key1}] = ${value1}, Db[${key2}] = ${value2}`);
+    //   });
+    //   console.log(result);
+    //   // get the sum of result:
+    //   let BallSum = 0;
+    //   for (const key in result) {
+    //     BallSum += result[key].total_volume;
+    //   }
+    //   console.log("Sum:", BallSum);
+    //   let halfVolume = [];
+    //   let fullVolume = [];
+    //   // todo: half empty volume bucket
+    //   // console.log("buckets:", buckets);
+    //   buckets.forEach((value, index) => {
+    //     value.dataValues.max_volume > value.dataValues.empty_volume &&
+    //     value.dataValues.empty_volume !== 0
+    //       ? halfVolume.push(value.dataValues)
+    //       : fullVolume.push(value.dataValues);
+    //   });
+    //   // * Sort halfVolume by mini volumes
+    //   halfVolume.sort((a, b) => {
+    //     const empty_volumeA = a.max_volume - a.empty_volume;
+    //     const empty_volumeB = b.max_volume - b.empty_volume;
+    //     if (empty_volumeA !== empty_volumeB) {
+    //       return empty_volumeA - empty_volumeB;
+    //     }
+    //   });
+    //   // * Sort fullVolume by highest volumes
+    //   fullVolume.sort((a, b) => {
+    //     return b.empty_volume - a.empty_volume;
+    //   });
+    //   // ! store balls in bucket exist balls
+    //   // let bucketBalls = {
+    //   //   1: 5,
+    //   //   2: 3,
+    //   //   4: 1,
+    //   // };
+    //   // const bucketBall = await Bucket.findByPk(1);
+    //   // bucketBall.exist_balls = bucketBalls;
+    //   // const storeBalls = await bucketBall.save();
+    //   // console.log("storeBalls:", storeBalls);
+    //   // * if halfVolume is exist
+    //   // ? store balls in loop
+    //   let halfVolumeCheck = true;
+    //   let fullVolumeCheck = true;
+    //   while (BallSum > 0) {
+    //     if (halfVolumeCheck && halfVolume.length > 0) {
+    //       // console.log("halfVolume:", halfVolume[0]);
+    //       // console.log("result:", result);
+    //       for (let j = 0; j < halfVolume.length; j++) {
+    //         for (let i = 0; i < result.length; ) {
+    //           if (halfVolume[j].empty_volume > result[i].volume) {
+    //             if (result[i].total_ball != 0) {
+    //               result[i].total_ball -= 1;
+    //             } else {
+    //               i++;
+    //               continue;
+    //             }
+    //             halfVolume[j].empty_volume -= result[i].volume;
+    //             BallSum -= result[i].volume;
+    //             result[i].total_volume -= result[i].volume;
+    //             console.log("balls volums:", result[i].volume);
+    //             // Todo: update bucket
+    //           } else {
+    //             i++;
+    //           }
+    //           // console.log("result:", result[i]);
+    //           // Todo: store and remove values here
+    //         }
+    //       }
+    //       halfVolumeCheck = false;
+    //       // console.log("result:", result);
+    //       // Todo: Store balls in half buckets
+    //     } else if (fullVolumeCheck && fullVolume.length > 0) {
+    //       for (let j = 0; j < fullVolume.length; j++) {
+    //         for (let i = 0; i < result.length; ) {
+    //           if (fullVolume[j].empty_volume > result[i].volume) {
+    //             if (result[i].total_ball != 0) {
+    //               result[i].total_ball -= 1;
+    //             } else {
+    //               i++;
+    //               continue;
+    //             }
+    //             fullVolume[j].empty_volume -= result[i].volume;
+    //             BallSum -= result[i].volume;
+    //             result[i].total_volume -= result[i].volume;
+    //             console.log("balls volums:", result[i].volume);
+    //             // Todo: update bucket
+    //           } else {
+    //             i++;
+    //           }
+    //           // Todo: store and remove values here
+    //         }
+    //       }
+    //       fullVolumeCheck = false;
+    //       // Todo: Store balls in half buckets
+    //     } else {
+    //       let remainig = BallSum;
+    //       BallSum = 0;
+    //       // Todo: remainig balls store in variable
+    //       console.log("No Buckets Exist!");
+    //       console.log("result:", result);
+    //       console.log("halfVolume:", halfVolume);
+    //       console.log("fullVolume:", fullVolume);
+    //       return res.status(500).send("No Buckets Exist!");
+    //     }
+    //   }
+    //   console.log("result:", result);
+    //   return res.send();
+    // } catch (error) {
+    //   console.error("Error placing balls:", error);
+    // }
+
+
+
+    // Second - logic
+    function manageVolume(volume, result, BallSum, totalBalls, volumeCheck) {
+      for (let j = 0; j < volume.length; j++) {
+        for (let i = 0; i < result.length; ) {
+          if (volume[j].empty_volume > result[i].volume) {
+            if (result[i].total_ball != 0) {
+              result[i].total_ball -= 1;
+            } else {
+              i++;
+              continue;
+            }
+            volume[j].empty_volume -= result[i].volume;
+            BallSum -= result[i].volume;
+            result[i].total_volume -= result[i].volume;
+            totalBalls.push({
+              ball_id: result[i].ball_id,
+            });
+            volume[j].exist_balls = countBallRepetitions(totalBalls);
+          } else {
+            i++;
+          }
+        }
+      }
+      updateRecord(volume);
+      volumeCheck = false;
+      return { BallSum, volumeCheck };
+    }

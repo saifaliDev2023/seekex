@@ -1,0 +1,39 @@
+<div id="main-content">
+    <div class="headerTitle">
+        <h2>All Buckets</h2>
+        <div>
+            <button class="create_new" routerLink="/addBucket">Add New</button>
+            <button class="create_new" style="margin-left: 5px;" (click)="reset()">Reset</button>
+        </div>
+    </div>
+    <table cellpadding="7px">
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Max Volume</th>
+            <th>Empty Volume</th>
+            <th>Action</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of bucketData?.data">
+                <td>
+                    {{item.id}}
+                </td>
+                <td>
+                    {{item.bucket_name}}
+                </td>
+                <td>
+                    {{item.max_volume}}
+                </td>
+                <td>
+                    {{item.empty_volume}}
+                </td>
+                <td>
+                    <a (click)="deleteBucket(item.id)">Delete</a>
+                </td>
+            </tr>
+            <h2 *ngIf="bucketData?.data.length == 0" style="padding: 10px; color: aliceblue;">No Data Found</h2>
+        </tbody>
+    </table>
+
+</div>

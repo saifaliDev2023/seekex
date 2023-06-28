@@ -1,0 +1,14 @@
+<div id="main-content">
+    <h2>Add New Ball</h2>
+    <form class="post-form" (submit)="submitForm()">
+        <div class="form-group">
+            <label>Color</label>
+            <input type="text" name="color" [(ngModel)]="formData.color" required />
+        </div>
+        <div class="form-group">
+            <label>Volume</label>
+            <input type="text" name="volume" [(ngModel)]="formData.volume" required />
+        </div>
+        <input class="submit" type="submit" value="Save" />
+    </form>
+</div>
