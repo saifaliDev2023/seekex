@@ -61,6 +61,24 @@ export class HomeComponent {
       );
   }
 
+  bucketsView() {
+    this.http.get<ApiResponse>(`${this.url}/api/bucketViews`).subscribe(
+      (response: ApiResponse) => {
+        this.bucketsData = response.data;
+        console.log('bucketsData:', this.bucketsData);
+
+        this.ballData = response; // Store the fetched data in the variable
+        this.router.navigate(['.']);
+      },
+      (error) => {
+        // Error handling
+        console.error('error:', error);
+        this.errorData = error;
+        console.log('errorData:', this.errorData.error);
+      }
+    );
+  }
+
   reload() {
     window.location.reload();
   }

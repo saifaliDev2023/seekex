@@ -1,5 +1,8 @@
 <div id="main-content">
-    <h2>Bucket Suggestion</h2>
+    <div class="headerTitle">
+        <h2>Bucket Suggestion</h2>
+        <button class="create_new" style="margin-left: 5px;" (click)="bucketsView()">Buckets view</button>
+    </div>
     <form *ngIf="bucketsData.length == 0 && ballData?.data.length != 0" class="post-form" (submit)="submitForm()">
         <div class="form-group" *ngFor="let item of ballData?.data">
             <label>{{item.color}}</label>

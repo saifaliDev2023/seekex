@@ -150,8 +150,9 @@ const machine_test = {
         })
         .filter(Boolean);
       let BallSum = result.reduce((acc, obj) => acc + obj.total_volume, 0);
-      let halfVolume = [];
-      let fullVolume = [];
+      let halfVolume = [],
+        fullVolume = [],
+        bucketBallsResponse = [];
       buckets.forEach((value) => {
         if (
           value.dataValues.max_volume > value.dataValues.empty_volume &&
@@ -167,14 +168,14 @@ const machine_test = {
           a.max_volume - a.empty_volume - (b.max_volume - b.empty_volume)
       );
       fullVolume.sort((a, b) => b.empty_volume - a.empty_volume);
-      let halfVolumeCheck = true;
-      let fullVolumeCheck = true;
-      let totalBalls = [];
+      let halfVolumeCheck = true,
+        fullVolumeCheck = true,
+        totalBalls = [];
       while (BallSum > 0) {
         if (halfVolumeCheck && halfVolume.length > 0) {
           for (let j = 0; j < halfVolume.length; j++) {
             for (let i = 0; i < result.length; ) {
-              if (halfVolume[j].empty_volume > result[i].volume) {
+              if (halfVolume[j].empty_volume >= result[i].volume) {
                 if (result[i].total_ball != 0) {
                   result[i].total_ball -= 1;
                 } else {
@@ -184,11 +185,7 @@ const machine_test = {
                 halfVolume[j].empty_volume -= result[i].volume;
                 BallSum -= result[i].volume;
                 result[i].total_volume -= result[i].volume;
-
-                // ** check total balls
-                totalBalls.push({
-                  ball_id: result[i].ball_id,
-                });
+                totalBalls.push({ ball_id: result[i].ball_id });
                 halfVolume[j].exist_balls = countBallRepetitions(totalBalls);
               } else {
                 i++;
@@ -206,19 +203,18 @@ const machine_test = {
             fullVolumeCheck
           ));
         } else {
-          return res
-            .status(500)
-            .send(
-              "No Buckets Exist & The rest of the data has been destroyed!"
-            );
+          bucketBallsResponse.push(await getBucketBalls());
+          bucketBallsResponse.push(
+            "Error: The available space or capacity is completely exhausted; all additional data deleted!"
+          );
+          return res.status(200).send({ data: bucketBallsResponse });
         }
       }
-
-      let bucketBallsResponse = await getBucketBalls();
-
-      return res
-        .status(200)
-        .send({ message: "Place balls succesfuly", data: bucketBallsResponse });
+      bucketBallsResponse.push(await getBucketBalls());
+      return res.status(200).send({
+        message: "Place balls successfully",
+        data: bucketBallsResponse,
+      });
     } catch (error) {
       console.error("Error placing balls:", error);
     }
@@ -232,7 +228,7 @@ const machine_test = {
     ) {
       for (let j = 0; j < volume.length; j++) {
         for (let i = 0; i < result.length; ) {
-          if (volume[j].empty_volume > result[i].volume) {
+          if (volume[j].empty_volume >= result[i].volume) {
             if (result[i].total_ball != 0) {
               result[i].total_ball -= 1;
             } else {
@@ -242,9 +238,7 @@ const machine_test = {
             volume[j].empty_volume -= result[i].volume;
             BallSum -= result[i].volume;
             result[i].total_volume -= result[i].volume;
-            totalBalls.push({
-              ball_id: result[i].ball_id,
-            });
+            totalBalls.push({ ball_id: result[i].ball_id });
             volume[j].exist_balls = countBallRepetitions(totalBalls);
           } else {
             i++;
@@ -256,47 +250,12 @@ const machine_test = {
       return { BallSum, fullVolumeCheck };
     }
 
-    async function getBucketBalls() {
-      let ballsResponse = [];
-      const buckets = await Bucket.findAll();
-
-      for (let value of buckets) {
-        let ballDetails = {};
-        let notNull = value.dataValues.exist_balls;
-
-        if (notNull != null) {
-          let exist_balls = JSON.parse(value.exist_balls);
-          let bucket_name = value.bucket_name;
-
-          for (let key in exist_balls) {
-            let getBall = await Ball.findByPk(parseInt(key));
-            let ball_color = getBall.dataValues.color;
-            let ball_qty = exist_balls[key];
-            ballDetails[ball_color] = ball_qty;
-          }
-
-          // Message create here
-          let output = `Bucket ${bucket_name}: Place`;
-          for (let color in ballDetails) {
-            const count = ballDetails[color];
-            output += ` ${color} ${count} ball${count > 1 ? "s" : ""},`;
-          }
-          ballsResponse.push(output);
-        }
-      }
-
-      return ballsResponse;
-    }
-
-    // Function to count ball repetitions
     function countBallRepetitions(balls) {
       const repetitions = {};
-
       for (let ball of balls) {
         const id = ball.ball_id;
         repetitions[id] = repetitions[id] ? repetitions[id] + 1 : 1;
       }
-
       return repetitions;
     }
 
@@ -314,15 +273,12 @@ const machine_test = {
       }
     }
 
-    // Function to add the values of two objects
     function addObjectValues(obj1, obj2) {
       let result = {};
-
       if (obj2 == null || typeof obj1 != "object") {
         result = obj1;
         return result;
       }
-
       for (let key in obj1) {
         if (obj2.hasOwnProperty(key)) {
           result[key] = obj1[key] + obj2[key];
@@ -330,13 +286,11 @@ const machine_test = {
           result[key] = obj1[key];
         }
       }
-
       for (let key in obj2) {
         if (!obj1.hasOwnProperty(key)) {
           result[key] = obj2[key];
         }
       }
-
       return result;
     }
   },
@@ -378,6 +332,41 @@ const machine_test = {
       res.status(500).json({ error: "Failed to reset all balls" });
     }
   },
+
+  async bucketViews(req, res, next) {
+    try {
+      let data = await getBucketBalls();
+      res.status(201).json({ message: "Retrieve Data succesfuly", data });
+    } catch (error) {
+      console.log("error:", error);
+      res.status(500).json({ error: "Failed to retrieve all balls" });
+    }
+  },
 };
 
+async function getBucketBalls() {
+  let ballsResponse = [];
+  const buckets = await Bucket.findAll();
+  for (let value of buckets) {
+    let ballDetails = {};
+    let notNull = value.dataValues.exist_balls;
+    if (notNull != null) {
+      let exist_balls = JSON.parse(value.exist_balls);
+      let bucket_name = value.bucket_name;
+      for (let key in exist_balls) {
+        let getBall = await Ball.findByPk(parseInt(key));
+        let ball_color = getBall.dataValues.color;
+        let ball_qty = exist_balls[key];
+        ballDetails[ball_color] = ball_qty;
+      }
+      let output = `Bucket ${bucket_name}: Place`;
+      for (let color in ballDetails) {
+        const count = ballDetails[color];
+        output += ` ${color} ${count} ball${count > 1 ? "s" : ""},`;
+      }
+      ballsResponse.push(output);
+    }
+  }
+  return ballsResponse;
+}
 module.exports = machine_test;

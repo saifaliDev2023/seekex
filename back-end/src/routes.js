@@ -15,5 +15,6 @@ router.delete("/deleteBall/:id", machine_test.deleteBall);
 
 router.post("/placeBalls", machine_test.placeBalls);
 router.put("/reset", machine_test.reset);
+router.get("/bucketViews", machine_test.bucketViews);
 
 module.exports = router;
